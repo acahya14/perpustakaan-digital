@@ -169,36 +169,11 @@ Perpustakaan Digital © 2026
 
 <script>
 
-const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ_P-BXzr5ZeN7C5WFGSp40fEwpyO4dsYVdmn0Iw9THiuD2fQs3pgn0Gr-h3QtQiuKvxHmtVWRln863/pub?output=csv";
-
-let books=[];
+const sheetURL="https://opensheet.elk.sh/2PACX-1vQ_P-BXzr5ZeN7C5WFGSp40fEwpyO4dsYVdmn0Iw9THiuD2fQs3pgn0Gr-h3QtQiuKvxHmtVWRln863/Sheet1";
 
 fetch(sheetURL)
-.then(response => response.text())
-.then(data => {
-
-const rows = data.split("\n").slice(1);
-
-rows.forEach(row => {
-
-const col = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-
-books.push({
-judul: col[0],
-penulis: col[1],
-kategori: col[2],
-deskripsi: col[3],
-cover: col[4],
-pdf: col[5]
-});
-
-});
-
-tampilkan(books);
-
-});
-
-function tampilkan(data){
+.then(res=>res.json())
+.then(data=>{
 
 let html="";
 
@@ -206,12 +181,15 @@ data.forEach(b=>{
 
 html += 
 <div class="book">
-<img src="${b.cover}">
-<h3>${b.judul}</h3>
-<p>${b.penulis}</p>
 
-<a href="${b.pdf}" target="_blank">
-<button>Baca</button>
+<img src="${b.Cover}">
+
+<h3>${b.Judul}</h3>
+
+<p>${b.Penulis}</p>
+
+<a href="${b.LinkPDF}" target="_blank">
+<button>Baca Buku</button>
 </a>
 
 </div>
@@ -221,10 +199,11 @@ html +=
 
 document.getElementById("books").innerHTML = html;
 
-}
+});
 
 </script>
 
 </body>
 
 </html>
+
