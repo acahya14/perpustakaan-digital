@@ -169,35 +169,32 @@ Perpustakaan Digital © 2026
 
 <script>
 
-const sheetURL="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ_P-BXzr5ZeN7C5WFGSp40fEwpyO4dsYVdmn0Iw9THiuD2fQs3pgn0Gr-h3QtQiuKvxHmtVWRln863/pub?gid=0&single=true&output=csv";
+const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ_P-BXzr5ZeN7C5WFGSp40fEwpyO4dsYVdmn0Iw9THiuD2fQs3pgn0Gr-h3QtQiuKvxHmtVWRln863/pub?output=csv";
 
-let semuaBuku=[];
-let bookmark=JSON.parse(localStorage.getItem("bookmark"))||[];
+let books=[];
 
 fetch(sheetURL)
-.then(res=>res.text())
-.then(data=>{
+.then(response => response.text())
+.then(data => {
 
-const rows=data.split("\n").slice(1);
+const rows = data.split("\n").slice(1);
 
-rows.forEach(r=>{
+rows.forEach(row => {
 
-let c=r.split(",");
+const col = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
 
-semuaBuku.push({
-
-judul:c[0],
-penulis:c[1],
-kategori:c[2],
-deskripsi:c[3],
-cover:c[4],
-pdf:c[5]
-
+books.push({
+judul: col[0],
+penulis: col[1],
+kategori: col[2],
+deskripsi: col[3],
+cover: col[4],
+pdf: col[5]
 });
 
 });
 
-tampilkan(semuaBuku);
+tampilkan(books);
 
 });
 
@@ -207,89 +204,27 @@ let html="";
 
 data.forEach(b=>{
 
-html+=
-
+html += 
 <div class="book">
-
 <img src="${b.cover}">
-
 <h3>${b.judul}</h3>
-
 <p>${b.penulis}</p>
-<p>${b.kategori}</p>
-
-<div class="action">
 
 <a href="${b.pdf}" target="_blank">
-<button class="read">Baca</button>
+<button>Baca</button>
 </a>
 
-<a href="${b.pdf}" download>
-<button class="download">Download</button>
-</a>
-
-<button class="bookmark"
-onclick="simpan('${b.judul}')">
-
-⭐️
-
-</button>
-
 </div>
-
-</div>
-
 ;
 
 });
 
-document.getElementById("books").innerHTML=html;
-
-}
-
-function simpan(judul){
-
-bookmark.push(judul);
-
-localStorage.setItem("bookmark",JSON.stringify(bookmark));
-
-alert("Buku ditambahkan ke favorit");
-
-}
-
-document.getElementById("search").addEventListener("keyup",filter);
-
-document.getElementById("kategori").addEventListener("change",filter);
-
-function filter(){
-
-let key=document.getElementById("search").value.toLowerCase();
-
-let kat=document.getElementById("kategori").value;
-
-let hasil=semuaBuku.filter(b=>
-
-(b.judul.toLowerCase().includes(key) ||
-
-b.penulis.toLowerCase().includes(key))
-
-&&
-
-(kat=="" || b.kategori==kat)
-
-);
-
-tampilkan(hasil);
-
-}
-
-function darkmode(){
-
-document.body.classList.toggle("dark");
+document.getElementById("books").innerHTML = html;
 
 }
 
 </script>
 
 </body>
+
 </html>
